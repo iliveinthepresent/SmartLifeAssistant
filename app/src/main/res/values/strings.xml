@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">AI智能助手</string>
+    <string-array name="welcome">
+        <item>欢迎回来！我是您的AI智能助手，有什么我可以帮您处理或解答的吗？</item>
+        <item>嗨！很高兴见到您。我是AI助手，准备好为您提供服务。</item>
+        <item>嗨！您是第一次使用吗？不用担心，我在这里帮助您。请问有什么我可以帮您处理的吗？</item>
+        <item>Hello！我是您的虚拟助手，有什么我可以帮您解决的问题吗？</item>
+        <item>欢迎使用AI智能助手。请告诉我，您今天需要什么帮助？</item>
+        <item>您好！我是您的AI助手，随时为您效劳。有什么问题或任务我可以帮助您完成？</item>
+        <item>欢迎来到AI助手的世界！请告诉我，您需要我的什么帮助？</item>
+    </string-array>
+    <string name="play_music">播放本地音乐</string>
+    <string name="parse_music">停止播放音乐</string>
+    <string name="query_telecommunication_traffic">查询电信卡流量</string>
+    <string name="query_mobile_traffic">查询移动卡流量</string>
+    <string name="show_newly_sms">查询最新短信</string>
+    <string name="show_weather">查询天气</string>
+    <string name="spark_api_key"></string>
+    <string name="spark_app_id"></string>
+    <string name="spark_api_secret"></string>
+    <string name="monitor_system_minute_broadcasts">监听系统分钟广播</string>
+    <string name="stop_listening_to_broadcasts">停止监听广播</string>
+
+</resources>
