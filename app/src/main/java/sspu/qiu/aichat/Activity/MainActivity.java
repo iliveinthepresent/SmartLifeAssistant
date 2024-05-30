@@ -334,8 +334,9 @@ public class MainActivity extends AppCompatActivity {
     private void setLLMConfig() {
         Log.d(TAG, "setLLMConfig");
         LLMConfig llmConfig = LLMConfig.builder();
-        llmConfig.domain("generalv3");
-//        llmConfig.url("ws(s)://spark-api.xf-yun.com/v3.1/chat");
+        llmConfig.domain("generalv3.5");
+        llmConfig.url("ws(s)://spark-api.xf-yun.com/v3.5/chat");
+//        llmConfig.maxToken(8192);
         //memory有两种，windows_memory和tokens_memory，二选一即可
         Memory window_memory = Memory.windowMemory(5);
         llm = new LLM(llmConfig, window_memory);
