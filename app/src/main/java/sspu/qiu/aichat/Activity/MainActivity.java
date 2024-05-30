@@ -25,6 +25,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -38,6 +39,15 @@ import com.hjq.permissions.OnPermissionCallback;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
+import com.iflytek.cloud.ErrorCode;
+import com.iflytek.cloud.InitListener;
+import com.iflytek.cloud.RecognizerResult;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechRecognizer;
+import com.iflytek.cloud.SpeechUtility;
+import com.iflytek.cloud.ui.RecognizerDialog;
+import com.iflytek.cloud.ui.RecognizerDialogListener;
 import com.iflytek.sparkchain.core.LLM;
 import com.iflytek.sparkchain.core.LLMCallbacks;
 import com.iflytek.sparkchain.core.LLMConfig;
@@ -48,12 +58,16 @@ import com.iflytek.sparkchain.core.Memory;
 import com.iflytek.sparkchain.core.SparkChain;
 import com.iflytek.sparkchain.core.SparkChainConfig;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
     private List<ChatBean> chatBeanList;
     private EditText et_send_msg;
     private Button btn_send;
+
+    private RecognizerDialog STT_Dialog;
+
+    private ImageButton start_speaking;
 
     private Button btn_local_instruct;
     private String welcome[];// 存储欢迎信息
@@ -95,6 +113,11 @@ public class MainActivity extends AppCompatActivity {
 
     private final StringBuilder resultMessage = new StringBuilder();
     private View btn_user_information;
+
+    private SpeechRecognizer                STT;                //
+
+    private HashMap<String, String>         STT_Results;        //
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,8 +159,89 @@ public class MainActivity extends AppCompatActivity {
 
         initView();
         initSDK();
+        STT_cfg_init();
     }
 
+    public void STT_cfg_init(){
+        SpeechUtility.createUtility(this, SpeechConstant.APPID +"=982080ac");                       //Create STT server,where the SDK package is deeply bound to this APPID parameter
+        STT = SpeechRecognizer.createRecognizer(MainActivity.this, mInitListener);                  //Initialize STT server
+        STT_params_init();                                                                          //Initialize STT params
+        STT_Results = new LinkedHashMap<String, String>();                                          //Initialize Hashmap
+        STT_Dialog = new RecognizerDialog(MainActivity.this, mInitListener);
+    }
+    //STT Param set
+    public void STT_params_init() {
+        STT.setParameter(SpeechConstant.CLOUD_GRAMMAR,  null );
+        STT.setParameter(SpeechConstant.SUBJECT,        null );
+        STT.setParameter(SpeechConstant.PARAMS,         null);
+        STT.setParameter(SpeechConstant.ENGINE_TYPE,    "cloud");
+        STT.setParameter(SpeechConstant.RESULT_TYPE,    "json");
+        STT.setParameter(SpeechConstant.LANGUAGE,       "zh_cn");
+        STT.setParameter(SpeechConstant.ACCENT,         "mandarin");
+        STT.setParameter(SpeechConstant.VAD_BOS,        "4000");
+        STT.setParameter(SpeechConstant.VAD_EOS,        "1000");
+        STT.setParameter(SpeechConstant.ASR_PTT,        "1");
+        STT.setParameter(SpeechConstant.AUDIO_FORMAT,   "wav");
+        STT.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory() + "/msc/iat.wav");
+    }
+    private InitListener mInitListener = new InitListener() {
+        @Override
+        public void onInit(int code) {
+            if (code != ErrorCode.SUCCESS);
+        }
+    };
+
+    private void start_speaking() {
+        STT_Results.clear();                                    //Clean dat
+        STT_Dialog.setListener(mRecognizerDialogListener);      //set Dialog event Listener
+        STT_Dialog.show();                                      //Show [IFLYTEK] API Interactive animations
+    }
+
+
+    //output the remote server result(iflytek API interface function)
+    private RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener() {
+
+        public void onResult(RecognizerResult results, boolean isLast) {
+
+            //RX.append(results.getResultString());     //Print Original json data
+            printResult(results);                     //show after analyze data
+
+        }
+
+        public void onError(SpeechError error) {
+        }
+    };
+
+    //JSON data analyze
+    private void printResult(RecognizerResult results) {
+//        RX.append("\n");
+        String text = JsonParser.parseIatResult(results.getResultString());
+        String sn = null;
+        // 读取json结果中的sn字段
+        try {
+            JSONObject resultJson = new JSONObject(results.getResultString());
+            sn = resultJson.optString("sn");
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        STT_Results.put(sn, text);
+
+        StringBuffer resultBuffer = new StringBuffer();
+        for (String key : STT_Results.keySet())
+            resultBuffer.append(STT_Results.get(key));
+
+        String res  = resultBuffer.toString();
+        sendData(res);
+        System.out.println(res);
+//        STT_RES.setText(res);//听写结果显示
+//        SC_LLM_Result = SC_LLM.run(res);
+//        if(SC_LLM_Result.getErrCode()==0){
+//            RX.append(SC_LLM_Result.getContent());
+//        }else{
+//            RX.setText("ERROR");
+//        }
+    }
     private void initXML() {
         try {
             // 读取weather1.xml文件
@@ -193,16 +297,19 @@ public class MainActivity extends AppCompatActivity {
         btn_user_information = findViewById(R.id.btn_user_information);
         et_send_msg = findViewById(R.id.et_send_msg);
         btn_send = findViewById(R.id.btn_send);
+        start_speaking = findViewById(R.id.stratSpeaking);
         adapter = new ChatAdapter(chatBeanList, this);
         listView.setAdapter(adapter);
         // 点击发送按钮，发送信息
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendData();
+                sendDataFromText();
                 ViewUtil.hideOneInputMethod(MainActivity.this, et_send_msg); // 隐藏输入法软键盘
             }
         });
+
+
         btn_local_instruct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,10 +330,17 @@ public class MainActivity extends AppCompatActivity {
             public boolean onKey(View v, int keyCode, KeyEvent keyEvent) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER &&
                         keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-                    sendData();
+                    sendDataFromText();
                     ViewUtil.hideOneInputMethod(MainActivity.this, et_send_msg); // 隐藏输入法软键盘
                 }
                 return false;
+            }
+        });
+
+        start_speaking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                start_speaking();
             }
         });
         // 获取一个随机数
@@ -347,20 +461,7 @@ public class MainActivity extends AppCompatActivity {
         llm.registerLLMCallbacks(llmCallbacks);
     }
 
-    // 用户发送消息
-    private void sendData() {
-        // 获取你输入的信息
-        sendMsg = et_send_msg.getText().toString();
-        // 判断消息是否为空
-        if (TextUtils.isEmpty(sendMsg)) {
-            Toast.makeText(this, "您还未输入信息哦", Toast.LENGTH_LONG).show();
-            return;
-        }
-        // 清空消息框
-        et_send_msg.setText("");
-        // 替换空格和换行
-        sendMsg = sendMsg.replaceAll(" ", "").
-                replaceAll("\n", "").trim();
+    private void sendData(String sendMsg) {
         ChatBean chatBean = new ChatBean();
         chatBean.setMessage(sendMsg);
         // SEND表示自己发送的信息
@@ -430,6 +531,22 @@ public class MainActivity extends AppCompatActivity {
         }
         // 从服务器获取机器人回复的信息
         startChat(sendMsg);
+    }
+    // 用户发送消息
+    private void sendDataFromText() {
+        // 获取你输入的信息
+        sendMsg = et_send_msg.getText().toString();
+        // 判断消息是否为空
+        if (TextUtils.isEmpty(sendMsg)) {
+            Toast.makeText(this, "您还未输入信息哦", Toast.LENGTH_LONG).show();
+            return;
+        }
+        // 清空消息框
+        et_send_msg.setText("");
+        // 替换空格和换行
+        sendMsg = sendMsg.replaceAll(" ", "").
+                replaceAll("\n", "").trim();
+        sendData(sendMsg);
     }
 
     @Override
