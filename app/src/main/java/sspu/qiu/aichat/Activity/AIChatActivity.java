@@ -76,18 +76,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-//import sspu.qiu.aichat.Adapter.ChatAdapter;
 import sspu.qiu.aichat.Adapter.ChatAdapter;
 import sspu.qiu.aichat.Bean.ChatBean;
 import sspu.qiu.aichat.Bean.SmsInfo;
 import sspu.qiu.aichat.Bean.WeatherInfo;
-import sspu.qiu.aichat.MainActivity;
 import sspu.qiu.aichat.R;
 import sspu.qiu.aichat.Service.MusicService;
 import sspu.qiu.aichat.Utils.ViewUtil;
 import sspu.qiu.aichat.Utils.WeatherParsing;
 import sspu.qiu.aichat.ui.Side_Menu;
-import sspu.qiu.aichat.ui.bianqian.HomeFragment;
+import sspu.qiu.aichat.ui.bianqian.DBop;
+import sspu.qiu.aichat.ui.bianqian.Note;
 
 public class AIChatActivity extends AppCompatActivity {
     private ListView listView;
@@ -127,24 +126,23 @@ public class AIChatActivity extends AppCompatActivity {
     private final StringBuilder resultMessage = new StringBuilder();
     private View btn_user_information;
 
-    private SpeechRecognizer                STT;                //
+    private SpeechRecognizer STT;                //
 
-    private HashMap<String, String>         STT_Results;        //
+    private HashMap<String, String> STT_Results;        //
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ai_chat);
-        if (getSupportActionBar() != null){//去除默认的ActionBar
+        if (getSupportActionBar() != null) {//去除默认的ActionBar
             getSupportActionBar().hide();
         }
         //状态栏颜色
-        if(!Side_Menu.night_mode){
+        if (!Side_Menu.night_mode) {
             setStatusBarColor(AIChatActivity.this, Color.parseColor("#A09AB4"));
-        }
-        else{
-            setStatusBarColor(AIChatActivity.this,Color.parseColor("#3b3b3b"));
+        } else {
+            setStatusBarColor(AIChatActivity.this, Color.parseColor("#3b3b3b"));
         }
         toolbar = (Toolbar) findViewById(R.id.edit_rc_Toolbar);
         //不加这行菜单无法显示，告诉fragment我们有菜单的
@@ -153,11 +151,10 @@ public class AIChatActivity extends AppCompatActivity {
 //        Menu menu = myToolbar.getMenu();
 //        menu.clear();
         //加载菜单
-        if(!Side_Menu.night_mode){
+        if (!Side_Menu.night_mode) {
             toolbar.inflateMenu(R.menu.ai_menu);
             toolbar.setNavigationIcon(R.drawable.ic_back_edit_24dp);
-        }
-        else{
+        } else {
             toolbar.inflateMenu(R.menu.ai_menu);
             toolbar.setNavigationIcon(R.drawable.ic_back_white_24dp);
         }
@@ -224,32 +221,34 @@ public class AIChatActivity extends AppCompatActivity {
         STT_cfg_init();
     }
 
-    public void STT_cfg_init(){
-        SpeechUtility.createUtility(this, SpeechConstant.APPID +"=982080ac");                       //Create STT server,where the SDK package is deeply bound to this APPID parameter
+    public void STT_cfg_init() {
+        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=982080ac");                       //Create STT server,where the SDK package is deeply bound to this APPID parameter
         STT = SpeechRecognizer.createRecognizer(AIChatActivity.this, mInitListener);                  //Initialize STT server
         STT_params_init();                                                                          //Initialize STT params
         STT_Results = new LinkedHashMap<String, String>();                                          //Initialize Hashmap
         STT_Dialog = new RecognizerDialog(AIChatActivity.this, mInitListener);
     }
+
     //STT Param set
     public void STT_params_init() {
-        STT.setParameter(SpeechConstant.CLOUD_GRAMMAR,  null );
-        STT.setParameter(SpeechConstant.SUBJECT,        null );
-        STT.setParameter(SpeechConstant.PARAMS,         null);
-        STT.setParameter(SpeechConstant.ENGINE_TYPE,    "cloud");
-        STT.setParameter(SpeechConstant.RESULT_TYPE,    "json");
-        STT.setParameter(SpeechConstant.LANGUAGE,       "zh_cn");
-        STT.setParameter(SpeechConstant.ACCENT,         "mandarin");
-        STT.setParameter(SpeechConstant.VAD_BOS,        "4000");
-        STT.setParameter(SpeechConstant.VAD_EOS,        "1000");
-        STT.setParameter(SpeechConstant.ASR_PTT,        "1");
-        STT.setParameter(SpeechConstant.AUDIO_FORMAT,   "wav");
+        STT.setParameter(SpeechConstant.CLOUD_GRAMMAR, null);
+        STT.setParameter(SpeechConstant.SUBJECT, null);
+        STT.setParameter(SpeechConstant.PARAMS, null);
+        STT.setParameter(SpeechConstant.ENGINE_TYPE, "cloud");
+        STT.setParameter(SpeechConstant.RESULT_TYPE, "json");
+        STT.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+        STT.setParameter(SpeechConstant.ACCENT, "mandarin");
+        STT.setParameter(SpeechConstant.VAD_BOS, "4000");
+        STT.setParameter(SpeechConstant.VAD_EOS, "1000");
+        STT.setParameter(SpeechConstant.ASR_PTT, "1");
+        STT.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
         STT.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory() + "/msc/iat.wav");
     }
+
     private InitListener mInitListener = new InitListener() {
         @Override
         public void onInit(int code) {
-            if (code != ErrorCode.SUCCESS);
+            if (code != ErrorCode.SUCCESS) ;
         }
     };
 
@@ -283,7 +282,7 @@ public class AIChatActivity extends AppCompatActivity {
         try {
             JSONObject resultJson = new JSONObject(results.getResultString());
             sn = resultJson.optString("sn");
-        } catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
@@ -293,7 +292,7 @@ public class AIChatActivity extends AppCompatActivity {
         for (String key : STT_Results.keySet())
             resultBuffer.append(STT_Results.get(key));
 
-        String res  = resultBuffer.toString();
+        String res = resultBuffer.toString();
         sendData(res);
 //        System.out.println(res);
 //        STT_RES.setText(res);//听写结果显示
@@ -304,6 +303,7 @@ public class AIChatActivity extends AppCompatActivity {
 //            RX.setText("ERROR");
 //        }
     }
+
     private void initXML() {
         try {
             // 读取weather1.xml文件
@@ -368,8 +368,6 @@ public class AIChatActivity extends AppCompatActivity {
                 ViewUtil.hideOneInputMethod(AIChatActivity.this, et_send_msg); // 隐藏输入法软键盘
             }
         });
-
-
 
 
         // 点击Enter键也可以发送信息
@@ -576,10 +574,13 @@ public class AIChatActivity extends AppCompatActivity {
             unregisterReceiver(timeReceiver); // 注销接收器，注销之后就不再接收广播
             showLocalData("成功停止监听广播");
             return;
+        } else if ("你好".equals(sendMsg)) {
+            createNote("你好", " 2024-06-05 10:10:10");
         }
         // 从服务器获取机器人回复的信息
         startChat(sendMsg);
     }
+
     // 用户发送消息
     private void sendDataFromText() {
         // 获取你输入的信息
@@ -806,4 +807,12 @@ public class AIChatActivity extends AppCompatActivity {
         }
     }
 
+
+    private void createNote(String content, String time) {
+        Note newNote = new Note(content, time, 0);
+        DBop op = new DBop(getApplicationContext());
+        op.open();
+        op.addNote(newNote);
+        op.close();
+    }
 }
