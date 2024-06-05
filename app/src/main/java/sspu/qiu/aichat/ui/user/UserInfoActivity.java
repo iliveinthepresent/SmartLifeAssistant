@@ -23,11 +23,11 @@ import androidx.appcompat.widget.Toolbar;
 
 import java.util.List;
 
-import cn.bmob.v3.BmobObject;
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.UpdateListener;
+//import cn.bmob.v3.BmobObject;
+//import cn.bmob.v3.BmobQuery;
+//import cn.bmob.v3.exception.BmobException;
+//import cn.bmob.v3.listener.FindListener;
+//import cn.bmob.v3.listener.UpdateListener;
 import sspu.qiu.aichat.BarColor;
 import sspu.qiu.aichat.MainActivity;
 import sspu.qiu.aichat.R;
@@ -90,7 +90,7 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         });
 
-        BmobDBHelper.getInstance().init(this);//连接bmob
+//        BmobDBHelper.getInstance().init(this);//连接bmob
 
         usernameview=findViewById(R.id.et_info_name);
         passwordview=findViewById(R.id.et_info_password);
@@ -106,7 +106,7 @@ public class UserInfoActivity extends AppCompatActivity {
         user_preferences=getSharedPreferences("user", Context.MODE_PRIVATE);
         String username = user_preferences.getString("username","");
         if(!username.equals("")){
-            checkByName(username);//搜索用户信息完成初始化
+//            checkByName(username);//搜索用户信息完成初始化
         }
         else{
             Toast.makeText(UserInfoActivity.this,"用户信息获取错误",Toast.LENGTH_LONG).show();
@@ -145,7 +145,7 @@ public class UserInfoActivity extends AppCompatActivity {
                         Toast.makeText(UserInfoActivity.this,"两次密码不同，请验证后修改",Toast.LENGTH_LONG).show();
                     }
                     else{
-                        checkByName_ChangeInfo(uname);
+//                        checkByName_ChangeInfo(uname);
                     }
                 }
 
@@ -186,97 +186,97 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         });
     }
-
-    /**单个查询  用户信息
-     * 并执行显示操作
-     * **/
-    public void checkByName(String uname) {
-
-        BmobQuery<User> query = new BmobQuery<User>();
-        //查询playerName叫“比目”的数据
-        query.addWhereEqualTo("username", uname);
-        //执行查询方法
-        query.findObjects(new FindListener<User>() {
-            @Override
-            public void done(List<User> object, BmobException e) {
-                if (e == null) {
-                    if(object.size()>0){
-                        oldname = object.get(0).getUsername();
-                        usernameview.setText(object.get(0).getUsername());
-                        passwordview.setText(object.get(0).getPassword());
-                        passwordview2.setText(object.get(0).getPassword());
-                        school.setText(object.get(0).getUniversty());
-                        myflag.setText(object.get(0).getMyflag());
-                        if(object.get(0).getSex().equals("男")){
-                            RadioButton radioButton = findViewById(R.id.info_radioButton);
-                            radioButton.setChecked(true);
-                        }
-                        else{
-                            RadioButton radioButton = findViewById(R.id.info_radioButton2);
-                            radioButton.setChecked(true);
-                        }
-                    }
-                    else {
-                        Toast.makeText(UserInfoActivity.this,"用户信息获取失败",Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
-                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
-                }
-            }
-        });
-    }
-
-    /**单个查询  用户信息
-     * 并执行修改操作
-     * **/
-    public void checkByName_ChangeInfo(String uname) {
-
-        BmobQuery<User> query = new BmobQuery<User>();
-        //查询playerName叫“比目”的数据
-        query.addWhereEqualTo("username", uname);
-        //执行查询方法
-        query.findObjects(new FindListener<User>() {
-            @Override
-            public void done(List<User> object, BmobException e) {
-                if (e == null) {
-
-                    String id= object.get(0).getObjectId();
-                    if(uname.equals(oldname)){//用户名没改，可以修改
-                            update(new_user,id);
-                            Toast.makeText(UserInfoActivity.this,"修改成功",Toast.LENGTH_LONG).show();
-                    }
-                    else{//
-                        if(object.size()>0){//不可修改
-                            Toast.makeText(UserInfoActivity.this,"用户名已被占用，修改失败",Toast.LENGTH_LONG).show();
-                        }
-                        else {
-                            update(new_user,id);
-                            Toast.makeText(UserInfoActivity.this,"修改成功",Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                } else {
-                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
-                }
-            }
-        });
-    }
-
-
-    //更新单条数据
-    public void update(BmobObject ob, String objectId){//objectid是bmob后台自动生成的唯一id
-        ob.update(objectId, new UpdateListener() {
-            @Override
-            public void done(BmobException e) {
-                if(e==null){
-                    //LogUtil.e(MainActivity.class,"===更新成功===");
-                }else{
-                    // LogUtil.e(MainActivity.class,"更新失败："+e.getMessage()+","+e.getErrorCode());
-                }
-            }
-        });
-    }
+//
+//    /**单个查询  用户信息
+//     * 并执行显示操作
+//     * **/
+//    public void checkByName(String uname) {
+//
+//        BmobQuery<User> query = new BmobQuery<User>();
+//        //查询playerName叫“比目”的数据
+//        query.addWhereEqualTo("username", uname);
+//        //执行查询方法
+//        query.findObjects(new FindListener<User>() {
+//            @Override
+//            public void done(List<User> object, BmobException e) {
+//                if (e == null) {
+//                    if(object.size()>0){
+//                        oldname = object.get(0).getUsername();
+//                        usernameview.setText(object.get(0).getUsername());
+//                        passwordview.setText(object.get(0).getPassword());
+//                        passwordview2.setText(object.get(0).getPassword());
+//                        school.setText(object.get(0).getUniversty());
+//                        myflag.setText(object.get(0).getMyflag());
+//                        if(object.get(0).getSex().equals("男")){
+//                            RadioButton radioButton = findViewById(R.id.info_radioButton);
+//                            radioButton.setChecked(true);
+//                        }
+//                        else{
+//                            RadioButton radioButton = findViewById(R.id.info_radioButton2);
+//                            radioButton.setChecked(true);
+//                        }
+//                    }
+//                    else {
+//                        Toast.makeText(UserInfoActivity.this,"用户信息获取失败",Toast.LENGTH_LONG).show();
+//                    }
+//
+//                } else {
+//                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+//                }
+//            }
+//        });
+//    }
+//
+//    /**单个查询  用户信息
+//     * 并执行修改操作
+//     * **/
+//    public void checkByName_ChangeInfo(String uname) {
+//
+//        BmobQuery<User> query = new BmobQuery<User>();
+//        //查询playerName叫“比目”的数据
+//        query.addWhereEqualTo("username", uname);
+//        //执行查询方法
+//        query.findObjects(new FindListener<User>() {
+//            @Override
+//            public void done(List<User> object, BmobException e) {
+//                if (e == null) {
+//
+//                    String id= object.get(0).getObjectId();
+//                    if(uname.equals(oldname)){//用户名没改，可以修改
+//                            update(new_user,id);
+//                            Toast.makeText(UserInfoActivity.this,"修改成功",Toast.LENGTH_LONG).show();
+//                    }
+//                    else{//
+//                        if(object.size()>0){//不可修改
+//                            Toast.makeText(UserInfoActivity.this,"用户名已被占用，修改失败",Toast.LENGTH_LONG).show();
+//                        }
+//                        else {
+//                            update(new_user,id);
+//                            Toast.makeText(UserInfoActivity.this,"修改成功",Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//
+//                } else {
+//                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+//                }
+//            }
+//        });
+//    }
+//
+//
+//    //更新单条数据
+//    public void update(BmobObject ob, String objectId){//objectid是bmob后台自动生成的唯一id
+//        ob.update(objectId, new UpdateListener() {
+//            @Override
+//            public void done(BmobException e) {
+//                if(e==null){
+//                    //LogUtil.e(MainActivity.class,"===更新成功===");
+//                }else{
+//                    // LogUtil.e(MainActivity.class,"更新失败："+e.getMessage()+","+e.getErrorCode());
+//                }
+//            }
+//        });
+//    }
 
 
 }

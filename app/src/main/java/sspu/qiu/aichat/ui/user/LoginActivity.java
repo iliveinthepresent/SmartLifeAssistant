@@ -18,9 +18,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import java.util.List;
 
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
+//import cn.bmob.v3.BmobQuery;
+//import cn.bmob.v3.exception.BmobException;
+//import cn.bmob.v3.listener.FindListener;
 import sspu.qiu.aichat.BarColor;
 import sspu.qiu.aichat.MainActivity;
 import sspu.qiu.aichat.R;
@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
 
         login = findViewById(R.id.go_login);
 
-        BmobDBHelper.getInstance().init(this);
+//        BmobDBHelper.getInstance().init(this);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                 else{
                     String s=uname.getText().toString();
                     String p=pword.getText().toString();
-                    checkByName(s,p);
+//                    checkByName(s,p);
                 }
 
             }
@@ -113,43 +113,43 @@ public class LoginActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode,event);
     }
-
-    /**单个查询  用户信息**/
-    public void checkByName(String uname,String pw) {
-
-        BmobQuery<User> query = new BmobQuery<User>();
-        //查询playerName叫“比目”的数据
-        query.addWhereEqualTo("username", uname);
-        //执行查询方法
-        query.findObjects(new FindListener<User>() {
-            @Override
-            public void done(List<User> object, BmobException e) {
-                if (e == null) {
-
-                    if(object.size()>0){
-                        if(object.get(0).getPassword().equals(pw)){
-                            SharedPreferences.Editor editor = preferences.edit();//保存到本地
-                            editor.putString("username",uname);
-                            editor.commit();
-                            Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_LONG).show();
-                            //finish();
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            overridePendingTransition(R.anim.night_switch, R.anim.night_switch_over);
-                            finish();
-                        }
-                        else{
-                            Toast.makeText(LoginActivity.this,"密码错误",Toast.LENGTH_SHORT).show();
-                        }
-                    }else{
-                        Toast.makeText(LoginActivity.this,"账号不存在",Toast.LENGTH_SHORT).show();
-                    }
-
-                } else {
-                    Toast.makeText(LoginActivity.this,"失败：" + e.getMessage() + "," + e.getErrorCode(),Toast.LENGTH_SHORT).show();
-                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
-                }
-            }
-        });
-    }
+//
+//    /**单个查询  用户信息**/
+//    public void checkByName(String uname,String pw) {
+//
+//        BmobQuery<User> query = new BmobQuery<User>();
+//        //查询playerName叫“比目”的数据
+//        query.addWhereEqualTo("username", uname);
+//        //执行查询方法
+//        query.findObjects(new FindListener<User>() {
+//            @Override
+//            public void done(List<User> object, BmobException e) {
+//                if (e == null) {
+//
+//                    if(object.size()>0){
+//                        if(object.get(0).getPassword().equals(pw)){
+//                            SharedPreferences.Editor editor = preferences.edit();//保存到本地
+//                            editor.putString("username",uname);
+//                            editor.commit();
+//                            Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_LONG).show();
+//                            //finish();
+//                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                            overridePendingTransition(R.anim.night_switch, R.anim.night_switch_over);
+//                            finish();
+//                        }
+//                        else{
+//                            Toast.makeText(LoginActivity.this,"密码错误",Toast.LENGTH_SHORT).show();
+//                        }
+//                    }else{
+//                        Toast.makeText(LoginActivity.this,"账号不存在",Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                } else {
+//                    Toast.makeText(LoginActivity.this,"失败：" + e.getMessage() + "," + e.getErrorCode(),Toast.LENGTH_SHORT).show();
+//                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+//                }
+//            }
+//        });
+//    }
 
 }

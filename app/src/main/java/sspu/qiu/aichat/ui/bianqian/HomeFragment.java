@@ -29,6 +29,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import sspu.qiu.aichat.Activity.AIChatActivity;
+import sspu.qiu.aichat.Activity.SpeechRecognitionActivity;
 import sspu.qiu.aichat.R;
 import sspu.qiu.aichat.ui.Side_Menu;
 
@@ -50,6 +52,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     FloatingActionButton btn1;
     View root;
     private int marginTop =140;
+
+
 
 
     ////////////////////////////////////////////////
@@ -81,7 +85,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             @Override
             public void onClick(View v) {
                 //Log.d("HH", "Ok");//log输出测试
-                Intent intent = new Intent(getContext(),EditActivity.class);//意图
+                Intent intent = new Intent(getContext(), AIChatActivity.class);//意图
                 intent.putExtra("mode",4);//模式为4 代表新建笔记
                 startActivityForResult(intent,0);//启功EditActivity,并获取结果
             }

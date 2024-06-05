@@ -25,8 +25,6 @@ import androidx.fragment.app.Fragment;
 
 import sspu.qiu.aichat.MainActivity;
 import sspu.qiu.aichat.R;
-import sspu.qiu.aichat.ui.Cloud.Load;
-import sspu.qiu.aichat.ui.user.BmobDBHelper;
 import sspu.qiu.aichat.ui.user.LoginActivity;
 import sspu.qiu.aichat.ui.user.UserInfoActivity;
 
@@ -222,8 +220,8 @@ public class Side_Menu {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                      //将本地三个数据库清空，并将云端的三个数据库的内容都读取出来并存储到本地
-                        Load load = new Load();
-                        load.download(root.getContext(),username,fra);
+//                        Load load = new Load();
+//                        load.download(root.getContext(),username,fra);
                         Toast.makeText(root.getContext(),"云端的数据同步到本地成功",Toast.LENGTH_SHORT).show();
 
                         //刷新界面
@@ -265,8 +263,8 @@ public class Side_Menu {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     //将云端三个数据库清空，并将本地的三个数据库的内容都读取出来并存储到云端
-                        Load load = new Load();
-                        load.upload(root.getContext(),username);
+//                        Load load = new Load();
+//                        load.upload(root.getContext(),username);
                         Toast.makeText(root.getContext(),"本地的数据同步到云端成功",Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -293,7 +291,7 @@ public class Side_Menu {
 //        textNight=customView.findViewById(R.id.night_mode);
         topusername=customView.findViewById(R.id.top_username);
 
-        BmobDBHelper.getInstance().init(root.getContext());
+//        BmobDBHelper.getInstance().init(root.getContext());
         TextView user = customView.findViewById(R.id.user_text);
         SharedPreferences user_preferences;
         user_preferences=root.getContext().getSharedPreferences("user",Context.MODE_PRIVATE);

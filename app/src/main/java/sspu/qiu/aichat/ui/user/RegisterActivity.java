@@ -18,9 +18,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import java.util.List;
 
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
+//import cn.bmob.v3.BmobQuery;
+//import cn.bmob.v3.exception.BmobException;
+//import cn.bmob.v3.listener.FindListener;
 import sspu.qiu.aichat.BarColor;
 import sspu.qiu.aichat.R;
 import sspu.qiu.aichat.ui.Side_Menu;
@@ -79,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
         init();
 
-        BmobDBHelper.getInstance().init(this);
+//        BmobDBHelper.getInstance().init(this);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +103,7 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(RegisterActivity.this,"重复密码不一样，请重新输入",Toast.LENGTH_SHORT).show();
                     }
                     else{
-                        checkByName(uname);//查用户名是否重复  并注册
+//                        checkByName(uname);//查用户名是否重复  并注册
                     }
                 }
             }
@@ -120,37 +120,37 @@ public class RegisterActivity extends AppCompatActivity {
         myflag = findViewById(R.id.flag);
         button = findViewById(R.id.resister);
     }
-
-    /**单个查询  用户信息**/
-    public void checkByName(String uname) {
-        BmobQuery<User> query = new BmobQuery<User>();
-        //查询playerName叫“比目”的数据
-        query.addWhereEqualTo("username", uname);
-        //执行查询方法
-        query.findObjects(new FindListener<User>() {
-            @Override
-            public void done(List<User> object, BmobException e) {
-                if (e == null) {
-                    if(object.size()>0){
-                        Toast.makeText(getApplicationContext(),"用户名重复",Toast.LENGTH_SHORT).show();
-                    }else{
-                        User user = new User();
-                        user.setUsername(uname);
-                        user.setPassword(pword);
-                        user.setSex(sex);
-                        user.setUniversty(sch);
-                        user.setMyflag(flg);
-                        BmobDBOP bmobDBOP = new BmobDBOP();
-                        bmobDBOP.insert(user);
-                        Toast.makeText(getApplicationContext(),"注册成功,请登录",Toast.LENGTH_LONG).show();
-                        finish();
-                    }
-                    //Log.d("he", "查询成功   共有"+object.size()+"条数据"+ob.size() );
-                } else {
-                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
-                }
-            }
-        });
-    }
+//
+//    /**单个查询  用户信息**/
+//    public void checkByName(String uname) {
+//        BmobQuery<User> query = new BmobQuery<User>();
+//        //查询playerName叫“比目”的数据
+//        query.addWhereEqualTo("username", uname);
+//        //执行查询方法
+//        query.findObjects(new FindListener<User>() {
+//            @Override
+//            public void done(List<User> object, BmobException e) {
+//                if (e == null) {
+//                    if(object.size()>0){
+//                        Toast.makeText(getApplicationContext(),"用户名重复",Toast.LENGTH_SHORT).show();
+//                    }else{
+//                        User user = new User();
+//                        user.setUsername(uname);
+//                        user.setPassword(pword);
+//                        user.setSex(sex);
+//                        user.setUniversty(sch);
+//                        user.setMyflag(flg);
+//                        BmobDBOP bmobDBOP = new BmobDBOP();
+//                        bmobDBOP.insert(user);
+//                        Toast.makeText(getApplicationContext(),"注册成功,请登录",Toast.LENGTH_LONG).show();
+//                        finish();
+//                    }
+//                    //Log.d("he", "查询成功   共有"+object.size()+"条数据"+ob.size() );
+//                } else {
+//                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+//                }
+//            }
+//        });
+//    }
 
 }

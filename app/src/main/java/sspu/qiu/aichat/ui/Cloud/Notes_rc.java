@@ -1,8 +1,8 @@
 package sspu.qiu.aichat.ui.Cloud;
 
-import cn.bmob.v3.BmobObject;
+//import cn.bmob.v3.BmobObject;
 
-public class Notes_rc extends BmobObject  {
+public class Notes_rc   {
 
     private String username;
     private String title;

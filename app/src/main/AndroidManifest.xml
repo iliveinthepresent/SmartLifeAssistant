@@ -62,13 +62,24 @@
         <activity android:name=".ui.user.RegisterActivity">
 
         </activity>
-        <provider
-            android:name="cn.bmob.v3.util.BmobContentProvider"
-            android:authorities="sspu.qiu.aichat.BmobContentProvider">
-        </provider>
+<!--        <provider-->
+<!--            android:name="cn.bmob.v3.util.BmobContentProvider"-->
+<!--            android:authorities="sspu.qiu.aichat.BmobContentProvider">-->
+<!--        </provider>-->
         <activity android:name=".ui.user.UserInfoActivity">
 
         </activity>
+
+                <activity
+                    android:name=".Activity.AIChatActivity"
+                    android:exported="false" />
+
+
+<!--        <activity-->
+<!--                    android:name=".Activity.SpeechRecognitionActivity"-->
+<!--                    android:exported="true"-->
+<!--                    android:label="@string/title_activity_speech_recognition"-->
+<!--                    android:theme="@style/Theme.AIChat"/>-->
     </application>
 
 <!--    <application-->

@@ -17,8 +17,9 @@ import com.hjq.toast.ToastUtils;
 
 import sspu.qiu.aichat.Database.UserInfoManager;
 import sspu.qiu.aichat.R;
-
-
+import sspu.qiu.aichat.ui.user.RegisterActivity;
+//
+//
 //public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 //    private EditText etAccount;
 //    private EditText etPassword;

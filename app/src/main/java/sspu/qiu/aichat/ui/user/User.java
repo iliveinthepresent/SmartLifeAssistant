@@ -1,8 +1,8 @@
 package sspu.qiu.aichat.ui.user;
 
-import cn.bmob.v3.BmobObject;
+//import cn.bmob.v3.BmobObject;
 
-public class User extends BmobObject {
+public class User  {
 
     private  String username;
     private  String password;
