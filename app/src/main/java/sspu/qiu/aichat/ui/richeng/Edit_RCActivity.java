@@ -47,6 +47,7 @@ public class Edit_RCActivity extends AppCompatActivity {
     private String old_day;
     private long id=0;
     private int openMode = 0;
+
     public Intent intent = new Intent();
     public boolean tagChange = false;
     Toolbar toolbar;

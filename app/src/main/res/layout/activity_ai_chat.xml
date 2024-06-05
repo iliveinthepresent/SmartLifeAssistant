@@ -6,39 +6,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Activity.AIChatActivity">
-
-    <RelativeLayout
-        android:id="@+id/rl_robot_container"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/edit_rc_Toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:background="#A09AB4"
+        app:titleTextColor="?attr/titleColor"
+        android:layout_height="?attr/actionBarSize"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/AlertDialog.AppCompat.Light"
+        />
+    <View
+        android:id="@+id/shadow1"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@drawable/toolbar_shadow">
+    </View>
 
-        <!-- 机器人的TextView -->
-        <TextView
-            android:id="@+id/tv_robot"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="#0cc4e5"
-            android:gravity="center"
-            android:text="机器人"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
 
-        <!-- 放置在内部左侧的Button -->
-        <Button
-            android:id="@+id/btn_local_instruct"
-            android:layout_width="120dp"
-            android:layout_height="40dp"
-            android:text="本地指令" />
 
-        <!-- 用户中心按钮 -->
-        <Button
-            android:id="@+id/btn_user_information"
-            android:layout_width="120dp"
-            android:layout_height="40dp"
-            android:text="用户中心"
-            android:layout_alignParentRight="true" />
-
-    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -57,9 +42,9 @@
         <RelativeLayout
             android:id="@+id/rl_bottom"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="90dp"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/bottom_bg">
+            android:background="#A09AB4">
 
             <Button
                 android:id="@+id/btn_send"
@@ -68,7 +53,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/btn_send_selector"
                 android:text="发送"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />

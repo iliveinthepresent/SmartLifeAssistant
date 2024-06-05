@@ -85,6 +85,17 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             @Override
             public void onClick(View v) {
                 //Log.d("HH", "Ok");//log输出测试
+                Intent intent = new Intent(getContext(), EditActivity.class);//意图
+                intent.putExtra("mode",4);//模式为4 代表新建笔记
+                startActivityForResult(intent,0);//启功EditActivity,并获取结果
+            }
+        });
+
+        FloatingActionButton btn2 = root.findViewById(R.id.ai_chat_start);
+        btn2.setOnClickListener(new View.OnClickListener() {//点击添加
+            @Override
+            public void onClick(View v) {
+                //Log.d("HH", "Ok");//log输出测试
                 Intent intent = new Intent(getContext(), AIChatActivity.class);//意图
                 intent.putExtra("mode",4);//模式为4 代表新建笔记
                 startActivityForResult(intent,0);//启功EditActivity,并获取结果

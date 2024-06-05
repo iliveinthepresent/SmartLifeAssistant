@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import sspu.qiu.aichat.Activity.AIChatActivity;
 import sspu.qiu.aichat.R;
 import sspu.qiu.aichat.ui.Side_Menu;
 
@@ -113,6 +114,18 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
             public void onClick(View v) {
                 //Log.d("HH", "Ok");//log输出测试
                 Intent intent = new Intent(getContext(), Edit_RCActivity.class);//意图
+                intent.putExtra("mode",4);//模式为4 代表新建笔记
+                intent.putExtra("day",select_day);
+                startActivityForResult(intent,0);//启功EditActivity,并获取结果
+            }
+        });
+
+        FloatingActionButton btn3 =(FloatingActionButton) root.findViewById(R.id.ai_chat_start);
+        btn3.setOnClickListener(new View.OnClickListener() {//点击添加
+            @Override
+            public void onClick(View v) {
+                //Log.d("HH", "Ok");//log输出测试
+                Intent intent = new Intent(getContext(), AIChatActivity.class);//意图
                 intent.putExtra("mode",4);//模式为4 代表新建笔记
                 intent.putExtra("day",select_day);
                 startActivityForResult(intent,0);//启功EditActivity,并获取结果

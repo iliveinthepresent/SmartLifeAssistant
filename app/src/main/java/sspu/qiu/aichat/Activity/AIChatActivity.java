@@ -1,5 +1,7 @@
 package sspu.qiu.aichat.Activity;
 
+import static sspu.qiu.aichat.BarColor.setStatusBarColor;
+
 import android.Manifest;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -12,6 +14,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +25,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +36,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -76,14 +81,19 @@ import sspu.qiu.aichat.Adapter.ChatAdapter;
 import sspu.qiu.aichat.Bean.ChatBean;
 import sspu.qiu.aichat.Bean.SmsInfo;
 import sspu.qiu.aichat.Bean.WeatherInfo;
+import sspu.qiu.aichat.MainActivity;
 import sspu.qiu.aichat.R;
 import sspu.qiu.aichat.Service.MusicService;
 import sspu.qiu.aichat.Utils.ViewUtil;
 import sspu.qiu.aichat.Utils.WeatherParsing;
+import sspu.qiu.aichat.ui.Side_Menu;
+import sspu.qiu.aichat.ui.bianqian.HomeFragment;
 
 public class AIChatActivity extends AppCompatActivity {
     private ListView listView;
     private ChatAdapter adapter;
+
+
     // 存放所有聊天数据的集合
     private List<ChatBean> chatBeanList;
     private EditText et_send_msg;
@@ -105,6 +115,8 @@ public class AIChatActivity extends AppCompatActivity {
 
     private Intent intent;
 
+    Toolbar toolbar;
+
     private myConn conn;
 
     private List<Map<String, String>> list;
@@ -124,6 +136,55 @@ public class AIChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ai_chat);
+        if (getSupportActionBar() != null){//去除默认的ActionBar
+            getSupportActionBar().hide();
+        }
+        //状态栏颜色
+        if(!Side_Menu.night_mode){
+            setStatusBarColor(AIChatActivity.this, Color.parseColor("#A09AB4"));
+        }
+        else{
+            setStatusBarColor(AIChatActivity.this,Color.parseColor("#3b3b3b"));
+        }
+        toolbar = (Toolbar) findViewById(R.id.edit_rc_Toolbar);
+        //不加这行菜单无法显示，告诉fragment我们有菜单的
+        // setHasOptionsMenu(true);
+        //清理
+//        Menu menu = myToolbar.getMenu();
+//        menu.clear();
+        //加载菜单
+        if(!Side_Menu.night_mode){
+            toolbar.inflateMenu(R.menu.ai_menu);
+            toolbar.setNavigationIcon(R.drawable.ic_back_edit_24dp);
+        }
+        else{
+            toolbar.inflateMenu(R.menu.ai_menu);
+            toolbar.setNavigationIcon(R.drawable.ic_back_white_24dp);
+        }
+        toolbar.setTitle("智能助手");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {//设置其点击事件
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent();
+                intent1.putExtra("old_day", 1);
+                setResult(RESULT_OK, intent1);
+                finish();
+            }
+        });
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                showAlertDialog();
+//                switch (item.getItemId()) {
+//                    case R.id.edit_rc_delete:
+//                        onEditRCDeleteClic();
+//                        break;
+//                }
+                return true;
+            }
+        });
+
+
         ToastUtils.init(getApplication());
         ToastUtils.setGravity(Gravity.TOP);
         intent = new Intent(this, MusicService.class);
@@ -234,7 +295,7 @@ public class AIChatActivity extends AppCompatActivity {
 
         String res  = resultBuffer.toString();
         sendData(res);
-        System.out.println(res);
+//        System.out.println(res);
 //        STT_RES.setText(res);//听写结果显示
 //        SC_LLM_Result = SC_LLM.run(res);
 //        if(SC_LLM_Result.getErrCode()==0){
@@ -293,9 +354,7 @@ public class AIChatActivity extends AppCompatActivity {
 
     // 绑定控件
     public void initView() {
-        btn_local_instruct = findViewById(R.id.btn_local_instruct);
         listView = findViewById(R.id.list);
-        btn_user_information = findViewById(R.id.btn_user_information);
         et_send_msg = findViewById(R.id.et_send_msg);
         btn_send = findViewById(R.id.btn_send);
         start_speaking = findViewById(R.id.stratSpeaking);
@@ -311,20 +370,8 @@ public class AIChatActivity extends AppCompatActivity {
         });
 
 
-        btn_local_instruct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 显示AlertDialog
-                showAlertDialog();
-            }
-        });
-        btn_user_information.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Intent intent = new Intent(AIChatActivity.this, UserInformationActivity.class);
-//                startActivity(intent);
-            }
-        });
+
+
         // 点击Enter键也可以发送信息
         et_send_msg.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -451,7 +498,7 @@ public class AIChatActivity extends AppCompatActivity {
         LLMConfig llmConfig = LLMConfig.builder();
         llmConfig.domain("generalv3.5");
         llmConfig.url("ws(s)://spark-api.xf-yun.com/v3.5/chat");
-//        llmConfig.maxToken(8192);
+        llmConfig.maxToken(100);
         //memory有两种，windows_memory和tokens_memory，二选一即可
         Memory window_memory = Memory.windowMemory(5);
         llm = new LLM(llmConfig, window_memory);
