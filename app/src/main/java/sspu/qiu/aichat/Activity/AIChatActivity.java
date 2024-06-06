@@ -782,18 +782,28 @@ public class AIChatActivity extends AppCompatActivity {
     // 双击2次返回键退出程序
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK
-                && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if ((System.currentTimeMillis() - exitTime) > 2000) {
-                Toast.makeText(AIChatActivity.this, "再按一次退出聊天程序", Toast.LENGTH_SHORT).show();
-                exitTime = System.currentTimeMillis();
-            } else {
-                AIChatActivity.this.finish();
-                System.exit(0);
-            }
+//        if (keyCode == KeyEvent.KEYCODE_BACK
+//                && event.getAction() == KeyEvent.ACTION_DOWN) {
+//            if ((System.currentTimeMillis() - exitTime) > 2000) {
+//                Toast.makeText(AIChatActivity.this, "再按一次退出聊天程序", Toast.LENGTH_SHORT).show();
+//                exitTime = System.currentTimeMillis();
+//            } else {
+//                AIChatActivity.this.finish();
+//                System.exit(0);
+//            }
+//            return true;
+//        }
+        if(keyCode==KeyEvent.KEYCODE_HOME){
             return true;
         }
-        return super.onKeyDown(keyCode, event);
+        else if(keyCode==KeyEvent.KEYCODE_BACK){//点击返回键
+            Intent intent1 = new Intent();
+            intent1.putExtra("old_day", 1);
+            setResult(RESULT_OK, intent1);
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode,event);
     }
 
     @Override
