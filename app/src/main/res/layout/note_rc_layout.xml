@@ -10,7 +10,7 @@
     android:paddingBottom="12dp"
     android:layout_marginBottom="20dp"
     android:background="@drawable/note_shape_rc"
-    android:outlineAmbientShadowColor="@color/black">
+          android:outlineAmbientShadowColor="@color/black">
 
     <LinearLayout
         android:layout_width="match_parent"

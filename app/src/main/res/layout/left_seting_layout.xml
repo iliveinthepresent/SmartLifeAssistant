@@ -21,17 +21,17 @@
             android:background="@drawable/login_bg"
             android:layout_width="wrap_content"
             android:layout_height="30dp">
-            <TextView
-                android:id="@+id/top_username"
-                android:textColor="#000"
-                android:text="未登录"
-                android:textStyle="bold"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:textSize="15sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+<!--            <TextView-->
+<!--                android:id="@+id/top_username"-->
+<!--                android:textColor="#000"-->
+<!--                android:text="未登录"-->
+<!--                android:textStyle="bold"-->
+<!--                android:layout_centerVertical="true"-->
+<!--                android:layout_marginStart="15dp"-->
+<!--                android:layout_marginEnd="15dp"-->
+<!--                android:textSize="15sp"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"/>-->
         </RelativeLayout>
     </RelativeLayout>
 
@@ -57,7 +57,7 @@
             android:textStyle="bold"
             android:gravity="center_vertical"
             android:textColor="#336699"
-            android:text="用户（请登录）"
+            android:text="用户"
             />
 
     </LinearLayout>
@@ -123,74 +123,74 @@
             android:layout_marginRight="10dp"
             android:foreground="@color/greyC"
             />
-        <LinearLayout
-            android:id="@+id/downlode"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal"
-            >
-            <ImageView
-                android:id="@+id/down_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginTop="12dp"
-                android:src="@drawable/ic_download_black_24dp"
-                />
-            <TextView
-                android:id="@+id/down_text"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textStyle="bold"
-                android:gravity="center_vertical"
-                android:textColor="#336699"
-                android:text="同步到本地"
-               />
-        </LinearLayout>
-        <!--线条-->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:foreground="@color/greyC"
-            />
+<!--        <LinearLayout-->
+<!--            android:id="@+id/downlode"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="48dp"-->
+<!--            android:orientation="horizontal"-->
+<!--            >-->
+<!--            <ImageView-->
+<!--                android:id="@+id/down_image"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="15dp"-->
+<!--                android:layout_marginEnd="15dp"-->
+<!--                android:layout_marginTop="12dp"-->
+<!--                android:src="@drawable/ic_download_black_24dp"-->
+<!--                />-->
+<!--            <TextView-->
+<!--                android:id="@+id/down_text"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:textStyle="bold"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:textColor="#336699"-->
+<!--                android:text="同步到本地"-->
+<!--               />-->
+<!--        </LinearLayout>-->
+<!--        &lt;!&ndash;线条&ndash;&gt;-->
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="1dp"-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:foreground="@color/greyC"-->
+<!--            />-->
 
-        <LinearLayout
-            android:id="@+id/uplode"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal"
-            >
-            <ImageView
-                android:id="@+id/up_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginTop="12dp"
-                android:src="@drawable/ic_upload_black_24dp"
-                />
-            <TextView
-                android:id="@+id/up_text"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:textStyle="bold"
-                android:gravity="center_vertical"
-                android:textColor="#336699"
-                android:text="同步到云端"
-                />
-        </LinearLayout>
-        <!--线条-->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:foreground="@color/greyC"
-            />
+<!--        <LinearLayout-->
+<!--            android:id="@+id/uplode"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="48dp"-->
+<!--            android:orientation="horizontal"-->
+<!--            >-->
+<!--            <ImageView-->
+<!--                android:id="@+id/up_image"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="15dp"-->
+<!--                android:layout_marginEnd="15dp"-->
+<!--                android:layout_marginTop="12dp"-->
+<!--                android:src="@drawable/ic_upload_black_24dp"-->
+<!--                />-->
+<!--            <TextView-->
+<!--                android:id="@+id/up_text"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="3"-->
+<!--                android:textStyle="bold"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:textColor="#336699"-->
+<!--                android:text="同步到云端"-->
+<!--                />-->
+<!--        </LinearLayout>-->
+<!--        &lt;!&ndash;线条&ndash;&gt;-->
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="1dp"-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:foreground="@color/greyC"-->
+<!--            />-->
 
 
     </LinearLayout>

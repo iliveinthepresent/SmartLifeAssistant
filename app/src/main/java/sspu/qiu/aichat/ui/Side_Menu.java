@@ -143,8 +143,8 @@ public class Side_Menu {
 
         user =  customView.findViewById(R.id.user);
         user.setClickable(true);
-        downlode = customView.findViewById(R.id.downlode);
-        uplode = customView.findViewById(R.id.uplode);
+//        downlode = customView.findViewById(R.id.downlode);
+//        uplode = customView.findViewById(R.id.uplode);
 
         //在主界面加载成功之后 显示弹出
         root.findViewById(layout_id).post(new Runnable() {
@@ -199,86 +199,86 @@ public class Side_Menu {
                 }
             }
         });
-
-        /**
-         * 点击下载文件到本地
-         * **/
-        downlode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(username.equals("")||username==null){
-                    Toast.makeText(root.getContext(),"请先登录后再操作",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                //定义AlertDialog.Builder对象，当长按列表项的时候弹出确认删除对话框
-                AlertDialog.Builder builder=new AlertDialog.Builder(root.getContext());
-                builder.setMessage("确定将云端的数据同步到本地?（本地文件会被清除）");
-                builder.setTitle("提示");
-
-                //添加AlertDialog.Builder对象的setPositiveButton()方法
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                     //将本地三个数据库清空，并将云端的三个数据库的内容都读取出来并存储到本地
-//                        Load load = new Load();
-//                        load.download(root.getContext(),username,fra);
-                        Toast.makeText(root.getContext(),"云端的数据同步到本地成功",Toast.LENGTH_SHORT).show();
-
-                        //刷新界面
-                        popupWindow.dismiss();
-                        fra.startActivity(new Intent(root.getContext(), MainActivity.class));
-                        fra.getActivity().overridePendingTransition(R.anim.night_switch, R.anim.night_switch_over);
-                        fra.getActivity().finish();
-                    }
-                });
-                //添加AlertDialog.Builder对象的setNegativeButton()方法
-                builder.setNegativeButton("手滑了", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.create().show();
-            }
-        });
-
-        /**
-         * 点击上传文件到云端
-         *
-         * **/
-        uplode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(username.equals("")||username==null){
-                    Toast.makeText(root.getContext(),"请先登录后再操作",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                //定义AlertDialog.Builder对象，当长按列表项的时候弹出确认删除对话框
-                AlertDialog.Builder builder=new AlertDialog.Builder(root.getContext());
-                builder.setMessage("确定将本地的数据同步到云端?（云端文件会被清除）");
-                builder.setTitle("提示");
-
-                //添加AlertDialog.Builder对象的setPositiveButton()方法
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    //将云端三个数据库清空，并将本地的三个数据库的内容都读取出来并存储到云端
-//                        Load load = new Load();
-//                        load.upload(root.getContext(),username);
-                        Toast.makeText(root.getContext(),"本地的数据同步到云端成功",Toast.LENGTH_SHORT).show();
-                    }
-                });
-                //添加AlertDialog.Builder对象的setNegativeButton()方法
-                builder.setNegativeButton("手滑了", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.create().show();
-
-            }
-        });
+//
+//        /**
+//         * 点击下载文件到本地
+//         * **/
+//        downlode.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(username.equals("")||username==null){
+//                    Toast.makeText(root.getContext(),"请先登录后再操作",Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                //定义AlertDialog.Builder对象，当长按列表项的时候弹出确认删除对话框
+//                AlertDialog.Builder builder=new AlertDialog.Builder(root.getContext());
+//                builder.setMessage("确定将云端的数据同步到本地?（本地文件会被清除）");
+//                builder.setTitle("提示");
+//
+//                //添加AlertDialog.Builder对象的setPositiveButton()方法
+//                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                     //将本地三个数据库清空，并将云端的三个数据库的内容都读取出来并存储到本地
+////                        Load load = new Load();
+////                        load.download(root.getContext(),username,fra);
+//                        Toast.makeText(root.getContext(),"云端的数据同步到本地成功",Toast.LENGTH_SHORT).show();
+//
+//                        //刷新界面
+//                        popupWindow.dismiss();
+//                        fra.startActivity(new Intent(root.getContext(), MainActivity.class));
+//                        fra.getActivity().overridePendingTransition(R.anim.night_switch, R.anim.night_switch_over);
+//                        fra.getActivity().finish();
+//                    }
+//                });
+//                //添加AlertDialog.Builder对象的setNegativeButton()方法
+//                builder.setNegativeButton("手滑了", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                });
+//                builder.create().show();
+//            }
+//        });
+//
+//        /**
+//         * 点击上传文件到云端
+//         *
+//         * **/
+//        uplode.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(username.equals("")||username==null){
+//                    Toast.makeText(root.getContext(),"请先登录后再操作",Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                //定义AlertDialog.Builder对象，当长按列表项的时候弹出确认删除对话框
+//                AlertDialog.Builder builder=new AlertDialog.Builder(root.getContext());
+//                builder.setMessage("确定将本地的数据同步到云端?（云端文件会被清除）");
+//                builder.setTitle("提示");
+//
+//                //添加AlertDialog.Builder对象的setPositiveButton()方法
+//                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                    //将云端三个数据库清空，并将本地的三个数据库的内容都读取出来并存储到云端
+////                        Load load = new Load();
+////                        load.upload(root.getContext(),username);
+//                        Toast.makeText(root.getContext(),"本地的数据同步到云端成功",Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//                //添加AlertDialog.Builder对象的setNegativeButton()方法
+//                builder.setNegativeButton("手滑了", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                });
+//                builder.create().show();
+//
+//            }
+//        });
     }
 
     //夜间模式
@@ -289,7 +289,7 @@ public class Side_Menu {
 //        setIc=customView.findViewById(R.id.settings_image);
 //        textSet=customView.findViewById(R.id.settings_text);
 //        textNight=customView.findViewById(R.id.night_mode);
-        topusername=customView.findViewById(R.id.top_username);
+//        topusername=customView.findViewById(R.id.top_username);
 
 //        BmobDBHelper.getInstance().init(root.getContext());
         TextView user = customView.findViewById(R.id.user_text);

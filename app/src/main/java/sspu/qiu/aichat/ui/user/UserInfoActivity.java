@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -20,9 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 
-
-import java.util.List;
-
 //import cn.bmob.v3.BmobObject;
 //import cn.bmob.v3.BmobQuery;
 //import cn.bmob.v3.exception.BmobException;
@@ -31,6 +27,7 @@ import java.util.List;
 import sspu.qiu.aichat.BarColor;
 import sspu.qiu.aichat.MainActivity;
 import sspu.qiu.aichat.R;
+import sspu.qiu.aichat.old.User;
 import sspu.qiu.aichat.ui.Side_Menu;
 
 public class UserInfoActivity extends AppCompatActivity {

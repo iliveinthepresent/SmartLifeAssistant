@@ -1,155 +1,144 @@
 package sspu.qiu.aichat.ui.user;
 
-import android.content.Context;
+
+import static sspu.qiu.aichat.BarColor.setStatusBarColor;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
-import java.util.List;
+import com.hjq.toast.ToastUtils;
 
-//import cn.bmob.v3.BmobQuery;
-//import cn.bmob.v3.exception.BmobException;
-//import cn.bmob.v3.listener.FindListener;
-import sspu.qiu.aichat.BarColor;
-import sspu.qiu.aichat.MainActivity;
+import sspu.qiu.aichat.Activity.AIChatActivity;
+import sspu.qiu.aichat.Database.UserInfoManager;
 import sspu.qiu.aichat.R;
 import sspu.qiu.aichat.ui.Side_Menu;
+import sspu.qiu.aichat.ui.bianqian.HomeFragment;
 
-public class LoginActivity extends AppCompatActivity {
-
-    Toolbar myToolbar;
-    Button registerBtn;
-    Button login;
-    TextView uname;
-    TextView pword;
-
-    private SharedPreferences preferences;
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+    private EditText etAccount;
+    private EditText etPassword;
+    private Button btnLogin;
+    private TextView tvRegister;
+    private CheckBox rememberPass;
+    // 读取数据和存储数据的对象
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(!Side_Menu.night_mode){
-            setContentView(R.layout.activity_login);
-        }
-        else{
-            setContentView(R.layout.night_activity_login);
-        }
-        if(!Side_Menu.night_mode){
-            BarColor.setStatusBarColor(LoginActivity.this, Color.parseColor("#A09AB4"));
-        }
-        else{
-            BarColor.setStatusBarColor(LoginActivity.this,Color.parseColor("#3b3b3b"));
-        }
-        if (getSupportActionBar() != null){//去除默认的ActionBar
+        setContentView(R.layout.activity_login);
+        initView();
+        // 由于Toast在某些安卓版本的机器上无法显示，这里使用github上的一个Toast框架来解决不同安卓机型的适配问题
+        ToastUtils.init(getApplication());
+        ToastUtils.setGravity(Gravity.TOP);
+
+        if (getSupportActionBar() != null) {//去除默认的ActionBar
             getSupportActionBar().hide();
         }
-        myToolbar = (Toolbar) findViewById(R.id.login_Toolbar);
-        if(!Side_Menu.night_mode){
-            myToolbar.setNavigationIcon(R.drawable.ic_back_edit_24dp);
+        //状态栏颜色
+        if (!Side_Menu.night_mode) {
+            setStatusBarColor(LoginActivity.this, Color.parseColor("#A09AB4"));
+        } else {
+            setStatusBarColor(LoginActivity.this, Color.parseColor("#3b3b3b"));
         }
-        else{
-            myToolbar.setNavigationIcon(R.drawable.ic_back_white_24dp);
+    }
+
+    private void initView() {
+        etAccount = findViewById(R.id.et_account);
+        etPassword = findViewById(R.id.et_password);
+        btnLogin = findViewById(R.id.btn_login);
+        tvRegister = findViewById(R.id.tv_register);
+        rememberPass = findViewById(R.id.rememberPass);
+        btnLogin.setOnClickListener(this);
+        tvRegister.setOnClickListener(this);
+
+        pref = getSharedPreferences("data", MODE_PRIVATE);
+        boolean isRemember = pref.getBoolean("remember", false);
+        // 如果记住密码
+        if (isRemember) {
+            String account = pref.getString("account", "");
+            String password = pref.getString("password", "");
+            // 将账号和密码设置到文本框中
+            etAccount.setText(account);
+            etPassword.setText(password);
+            rememberPass.setChecked(true);
         }
-        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {//设置其点击事件
-            @Override
-            public void onClick(View v) {
-                finish();//结束该活动，回到之前的Activity
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.btn_login) {
+            // 文本框中的内容
+            String acc = etAccount.getText().toString().trim();
+            String pass = etPassword.getText().toString().trim();
+
+            // 逻辑判断
+            if (TextUtils.isEmpty(acc) || TextUtils.isEmpty(pass)) {
+                ToastUtils.show("账号或密码不能为空");
+                return;
             }
-        });
-
-        registerBtn = findViewById(R.id.go_resister);
-        registerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-                //finish();//结束该活动
-            }
-        });
-        preferences=LoginActivity.this.getSharedPreferences("user", Context.MODE_PRIVATE);
-
-        uname = findViewById(R.id.et_name);
-        pword = findViewById(R.id.et_password);
-
-        login = findViewById(R.id.go_login);
-
-//        BmobDBHelper.getInstance().init(this);
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(uname.getText().toString().equals("")||pword.getText().toString().equals("")){
-                    Toast.makeText(LoginActivity.this,"请完善账号密码信息",Toast.LENGTH_SHORT).show();
+            // 存储的数据
+            String password = UserInfoManager.getInstance(this).findData(acc,
+                    UserInfoManager.PASSWORD);
+            // 如果密码正确
+            if (password.equals(pass)) {
+                // 获取editor实例
+                editor = pref.edit();
+                // 如果勾选了记住密码，就把账号密码保存到共享参数里，并且设置remember为true。下次创建这个活动时就会自动填写用户名和密码
+                if (rememberPass.isChecked()) {
+                    editor.putBoolean("remember", true);
+                    editor.putString("account", acc);
+                    editor.putString("password", pass);
+                } else {
+                    editor.putBoolean("remember", false);
                 }
-                else{
-                    String s=uname.getText().toString();
-                    String p=pword.getText().toString();
-//                    checkByName(s,p);
-                }
-
+                editor.apply();
+                ToastUtils.show("欢迎登录");
+                Intent intent = new Intent(LoginActivity.this, HomeFragment.class);
+                startActivity(intent);
+                finish();
+            } else {
+                ToastUtils.show("账号或密码不正确");
+                return;
             }
-        });
-
+        } else if (view.getId() == R.id.tv_register) {
+            // 跳转到注册活动
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivityForResult(intent, 1);
+        }
     }
 
 
-    public boolean onKeyDown(int keyCode, KeyEvent event){
-        if(keyCode==KeyEvent.KEYCODE_HOME){
-            return true;
+    // 得到注册活动返回的数据
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    String acc = data.getStringExtra("acc");
+                    String pass = data.getStringExtra("pass");
+                    // 将账号和密码设置到文本框中
+                    etAccount.setText(acc);
+                    etPassword.setText(pass);
+                }
+                break;
+            default:
+                break;
         }
-        else if(keyCode==KeyEvent.KEYCODE_BACK){//点击返回键
-            finish();//结束该活动，回到之前的Activity
-            return true;
-        }
-        return super.onKeyDown(keyCode,event);
-    }
-//
-//    /**单个查询  用户信息**/
-//    public void checkByName(String uname,String pw) {
-//
-//        BmobQuery<User> query = new BmobQuery<User>();
-//        //查询playerName叫“比目”的数据
-//        query.addWhereEqualTo("username", uname);
-//        //执行查询方法
-//        query.findObjects(new FindListener<User>() {
-//            @Override
-//            public void done(List<User> object, BmobException e) {
-//                if (e == null) {
-//
-//                    if(object.size()>0){
-//                        if(object.get(0).getPassword().equals(pw)){
-//                            SharedPreferences.Editor editor = preferences.edit();//保存到本地
-//                            editor.putString("username",uname);
-//                            editor.commit();
-//                            Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_LONG).show();
-//                            //finish();
-//                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-//                            overridePendingTransition(R.anim.night_switch, R.anim.night_switch_over);
-//                            finish();
-//                        }
-//                        else{
-//                            Toast.makeText(LoginActivity.this,"密码错误",Toast.LENGTH_SHORT).show();
-//                        }
-//                    }else{
-//                        Toast.makeText(LoginActivity.this,"账号不存在",Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                } else {
-//                    Toast.makeText(LoginActivity.this,"失败：" + e.getMessage() + "," + e.getErrorCode(),Toast.LENGTH_SHORT).show();
-//                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
-//                }
-//            }
-//        });
-//    }
 
+    }
 }
