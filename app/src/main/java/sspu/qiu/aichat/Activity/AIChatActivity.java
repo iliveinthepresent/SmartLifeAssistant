@@ -418,7 +418,7 @@ public class AIChatActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("本地指令大全");
         builder.setMessage("1.播放本地音乐 + 手机存储下的音乐文件路径名\n" +
-                "2.停止播放音乐\n" + "3.查询电信卡流量\n" + "4.查询移动卡流量\n" + "5.查询最新短信\n" + "6.查询天气\n" + "7.监听系统分钟广播\n" + "8.停止监听广播");
+                "2.停止播放音乐\n" + "3.查询电信卡流量\n" + "4.查询移动卡流量\n" + "5.查询最新短信\n" + "6.查询天气\n" + "7.监听系统分钟广播\n" + "8.停止监听广播\n" + "9.添加便签+便签内容\n" + "10.今天+时间点+提醒我+事项");
 
         // 添加确定按钮
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
