@@ -1,10 +1,13 @@
 package sspu.qiu.aichat.ui.richeng;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +24,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -67,6 +72,9 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
         }
         else{
             root = inflater.inflate(R.layout.night_layout_dashboard, container, false);
+        }
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.SCHEDULE_EXACT_ALARM) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SCHEDULE_EXACT_ALARM}, 123);
         }
 
 //        final TextView textView = root.findViewById(R.id.text_dashboard);
@@ -226,7 +234,7 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
                             curNote.setId(note.getId());
                             DBop_rc op = new DBop_rc(getContext());
                             op.open();
-                            cancelAlarm(curNote);//删除闹钟
+//                            cancelAlarm(curNote);//删除闹钟
                             op.removeNote(curNote);
                             op.close();
                             //System.out.println("success");
@@ -265,7 +273,7 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
                     public void onClick(DialogInterface dialog, int which) {
                         DBop_rc op = new DBop_rc(getContext());
                         op.open();
-                        cancelAlarms(op.getAllNotes());//删除所有闹钟
+//                        cancelAlarms(op.getAllNotes());//删除所有闹钟
                         op.close();
 
                         dbHelper = new NoteBD_RC(getContext());
@@ -303,7 +311,7 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
             op.open();
             op.updateNote(newNote);
             //更新闹钟
-            cancelAlarm(newNote);//删除闹钟
+//            cancelAlarm(newNote);//删除闹钟
             //startAlarm(newNote);//添加新闹钟
             op.close();
         } else if (returnMode == 0) {  // 新建了一个
@@ -313,11 +321,12 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
             String day = data.getExtras().getString("day");
             old_day=day;
             Note_RC newNote = new Note_RC(title,content,time,day);
+            System.out.println("newNote:" + time + "  day:" + day);
             DBop_rc op = new DBop_rc(getContext());
             op.open();
             op.addNote(newNote);
             //添加闹钟
-            //startAlarm(newNote);//添加新闹钟
+//            startAlarm(newNote);//添加新闹钟
             op.close();
             Log.d("he", "新建Day"+day);
         } else if (returnMode == 2) { //删除
@@ -327,7 +336,7 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
             op.open();
             op.removeNote(curNote);
             //删除闹钟
-            cancelAlarm(curNote);//删除闹钟
+//            cancelAlarm(curNote);//删除闹钟
             op.close();
         }
         else{//什么也不做
@@ -370,7 +379,7 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
             //cancelAlarms(noteList);//删除所有闹钟
         }
         noteList.addAll(op.getAllDayNotes(day));
-        startAlarms(op.getAllNotes());//添加所有新闹钟
+//        startAlarms(op.getAllNotes());//添加所有新闹钟
         op.close();
         adapter.notifyDataSetChanged();
 
@@ -414,6 +423,7 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
     /////////设置提醒
 
     //设置提醒
+    @SuppressLint("ScheduleExactAlarm")
     private void startAlarm(Note_RC p) {
         Calendar c = p.getPlanTime();
         if(!c.before(Calendar.getInstance())) {
@@ -424,7 +434,7 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
             Log.d("he", "测试测试测试"+p.getTitle()+p.getContent()+(int)p.getId());
             Log.d("he", "时间时间"+c.getTime());
             Log.d("he", "时间时间"+Calendar.getInstance().getTime());
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), (int) p.getId(), intent, 0);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), (int) p.getId(), intent, PendingIntent.FLAG_IMMUTABLE);
             //单次提醒
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
         }

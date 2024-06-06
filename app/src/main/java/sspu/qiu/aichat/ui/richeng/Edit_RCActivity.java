@@ -1,9 +1,11 @@
 package sspu.qiu.aichat.ui.richeng;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +23,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -94,6 +98,7 @@ public class Edit_RCActivity extends AppCompatActivity {
             toolbar.setNavigationIcon(R.drawable.ic_back_white_24dp);
         }
         toolbar.setTitle("日程编辑");
+
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {//设置其点击事件
             @Override
             public void onClick(View v) {

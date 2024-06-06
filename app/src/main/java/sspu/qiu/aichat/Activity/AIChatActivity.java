@@ -87,10 +87,16 @@ import sspu.qiu.aichat.Utils.WeatherParsing;
 import sspu.qiu.aichat.ui.Side_Menu;
 import sspu.qiu.aichat.ui.bianqian.DBop;
 import sspu.qiu.aichat.ui.bianqian.Note;
+import sspu.qiu.aichat.ui.richeng.DBop_rc;
+import sspu.qiu.aichat.ui.richeng.Note_RC;
 
 public class AIChatActivity extends AppCompatActivity {
     private ListView listView;
     private ChatAdapter adapter;
+
+    private String title;
+
+    private String time = null;
 
 
     // 存放所有聊天数据的集合
@@ -265,7 +271,11 @@ public class AIChatActivity extends AppCompatActivity {
         public void onResult(RecognizerResult results, boolean isLast) {
 
             //RX.append(results.getResultString());     //Print Original json data
-            printResult(results);                     //show after analyze data
+            try {
+                printResult(results);                     //show after analyze data
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
 
         }
 
@@ -274,7 +284,7 @@ public class AIChatActivity extends AppCompatActivity {
     };
 
     //JSON data analyze
-    private void printResult(RecognizerResult results) {
+    private void printResult(RecognizerResult results) throws InterruptedException {
 //        RX.append("\n");
         String text = JsonParser.parseIatResult(results.getResultString());
         String sn = null;
@@ -364,7 +374,11 @@ public class AIChatActivity extends AppCompatActivity {
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendDataFromText();
+                try {
+                    sendDataFromText();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 ViewUtil.hideOneInputMethod(AIChatActivity.this, et_send_msg); // 隐藏输入法软键盘
             }
         });
@@ -376,7 +390,11 @@ public class AIChatActivity extends AppCompatActivity {
             public boolean onKey(View v, int keyCode, KeyEvent keyEvent) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER &&
                         keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-                    sendDataFromText();
+                    try {
+                        sendDataFromText();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     ViewUtil.hideOneInputMethod(AIChatActivity.this, et_send_msg); // 隐藏输入法软键盘
                 }
                 return false;
@@ -437,7 +455,21 @@ public class AIChatActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         // 结束时把所有结果整合输出
-                        showData(resultMessage.toString());
+                        String resultStr = resultMessage.toString();
+                        if (resultStr.contains(":::")) {
+                            int start = resultStr.lastIndexOf(":::");
+                            time = resultStr.substring(start + 3, start + 8);
+                            System.out.println("timetime:" + time);
+                            createSchedule(title, time, dayToStr());
+                            ChatBean chatBean2 = new ChatBean();
+                            chatBean2.setMessage("添加日程成功");
+                            chatBean2.setState(ChatBean.RECEIVE);
+                            chatBeanList.add(chatBean2);
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            showData(resultStr);
+                        }
+
                         resultMessage.setLength(0);
                     }
                 });
@@ -507,7 +539,7 @@ public class AIChatActivity extends AppCompatActivity {
         llm.registerLLMCallbacks(llmCallbacks);
     }
 
-    private void sendData(String sendMsg) {
+    private void sendData(String sendMsg) throws InterruptedException {
         ChatBean chatBean = new ChatBean();
         chatBean.setMessage(sendMsg);
         // SEND表示自己发送的信息
@@ -574,15 +606,67 @@ public class AIChatActivity extends AppCompatActivity {
             unregisterReceiver(timeReceiver); // 注销接收器，注销之后就不再接收广播
             showLocalData("成功停止监听广播");
             return;
-        } else if ("你好".equals(sendMsg)) {
-            createNote("你好", " 2024-06-05 10:10:10");
+        } else if (sendMsg.contains("便签")) {
+            int start = sendMsg.indexOf("便签");
+            String content = sendMsg.substring(start + 2);
+            createNote(content, dateToStr());
+            ChatBean chatBean2 = new ChatBean();
+            chatBean2.setMessage("添加便签成功");
+            chatBean2.setState(ChatBean.RECEIVE);
+            chatBeanList.add(chatBean2);
+            return;
+        } else if (sendMsg.contains("提醒我")) {
+            int first = sendMsg.indexOf("提醒我");
+            String timeStr = sendMsg.substring(2, first);
+            title = sendMsg.substring(first + 3);
+//            sendDataFromText();
+            llm.arun("把" + timeStr + "这个时间点,格式化为\":::HH:DD\", 最后只输出格式化后的结果,注意要保留':::'", "myContext");
+//            while(time == null) {
+//                Thread.sleep(50);
+//            }
+//            createSchedule(title,time,dayToStr());
+//            time = null;
+//            ChatBean chatBean2 = new ChatBean();
+//            chatBean2.setMessage("添加日程成功");
+//            chatBean2.setState(ChatBean.RECEIVE);
+//            chatBeanList.add(chatBean2);
+            return;
         }
         // 从服务器获取机器人回复的信息
         startChat(sendMsg);
     }
 
+
+    /**
+     * @param title
+     * @param time  09:56
+     * @param day   day:20240606
+     */
+    private void createSchedule(String title, String time, String day) {
+        Note_RC newNote = new Note_RC(title, "", time, day);
+        DBop_rc op = new DBop_rc(getApplicationContext());
+        op.open();
+        op.addNote(newNote);
+        //添加闹钟
+//            startAlarm(newNote);//添加新闹钟
+        op.close();
+        Log.d("he", "新建Day" + day);
+    }
+
+    public String dateToStr() {//获取时间并规定格式
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return simpleDateFormat.format(date);
+    }
+
+    public String dayToStr() {//获取时间并规定格式
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+        return simpleDateFormat.format(date);
+    }
+
     // 用户发送消息
-    private void sendDataFromText() {
+    private void sendDataFromText() throws InterruptedException {
         // 获取你输入的信息
         sendMsg = et_send_msg.getText().toString();
         // 判断消息是否为空
