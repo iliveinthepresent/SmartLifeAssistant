@@ -258,7 +258,10 @@ public class AIChatActivity extends AppCompatActivity {
         }
     };
 
+    long timeMillis = 0;
     private void start_speaking() {
+
+
         STT_Results.clear();                                    //Clean dat
         STT_Dialog.setListener(mRecognizerDialogListener);      //set Dialog event Listener
         STT_Dialog.show();                                      //Show [IFLYTEK] API Interactive animations
@@ -269,7 +272,16 @@ public class AIChatActivity extends AppCompatActivity {
     private RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener() {
 
         public void onResult(RecognizerResult results, boolean isLast) {
-
+            if(timeMillis == 0) {
+                timeMillis = System.currentTimeMillis();
+            } else {
+                long cur = System.currentTimeMillis();
+                if(cur - timeMillis < 2000) {
+                    return;
+                } else {
+                    timeMillis = cur;
+                }
+            }
             //RX.append(results.getResultString());     //Print Original json data
             try {
                 printResult(results);                     //show after analyze data
@@ -303,6 +315,7 @@ public class AIChatActivity extends AppCompatActivity {
             resultBuffer.append(STT_Results.get(key));
 
         String res = resultBuffer.toString();
+        System.out.println("语音识别结果：" + res);
         sendData(res);
 //        System.out.println(res);
 //        STT_RES.setText(res);//听写结果显示
@@ -620,7 +633,7 @@ public class AIChatActivity extends AppCompatActivity {
             String timeStr = sendMsg.substring(2, first);
             title = sendMsg.substring(first + 3);
 //            sendDataFromText();
-            llm.arun("把" + timeStr + "这个时间点,格式化为\":::HH:DD\", 最后只输出格式化后的结果,注意要保留':::'", "myContext");
+            llm.arun("把" + timeStr + "这个时间点,格式化为\":::HH:DD\", 最后只输出格式化后的结果,注意要保留':::'， 例如我输入下午5点15分，你要生成\":::17:15\"", "myContext");
 //            while(time == null) {
 //                Thread.sleep(50);
 //            }
